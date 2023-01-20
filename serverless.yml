@@ -1,0 +1,83 @@
+service: service-lottery-jhoncabezas
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:Scan"
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "ses:SendEmail"
+      Resource: "*"
+
+resources:
+  Resources:
+    tableLottery:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: "tableLottery"
+        AttributeDefinitions:
+          - AttributeName: "numberticket"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "numberticket"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    tableLotteryTicket:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: "tableLotteryTicket"
+        AttributeDefinitions:
+          - AttributeName: "numberticket"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "numberticket"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        
+functions:
+  StartLottery:
+    handler: handler.StartLottery
+    events:
+      - http:
+          path: start
+          method: post
+          cors: true
+  RegisterTicket:
+    handler: handler.RegisterTicket
+    events:
+      - http:
+          path: register
+          method: post
+          cors: true
+  DeleteTicket:
+    handler: handler.DeleteTicket
+    events:
+      - http:
+          path: delete
+          method: delete
+          cors: true
+  GetLotteryData:
+    handler: handler.GetLotteryData
+    events:
+      - http:
+          path: /get/lotterydata
+          method: get
+          cors: true
+  GetTicketData:
+    handler: handler.GetTicketData
+    events:
+      - http:
+          path: /get/lotteryticket
+          method: get
+          cors: true
