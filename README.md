@@ -1,4 +1,4 @@
-# Laws Serverless Lottery 🎰
+# Backend: Serverless Lottery 🎰
 
 Este repositorio contiene una aplicación de lotería construida utilizando AWS Lambda y Serverless Framework.
 
